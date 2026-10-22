@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>pintor de arenas</title>
+<body style="margin:0;background:#222">
+<script src="../../public/sim.js"></script>
+<script src="lib.js"></script>
+<script src="common.js"></script>
+<script src="templo.js"></script>
+<script src="ilhas.js"></script>
+<script src="cosmica.js"></script>
+<script src="neon.js"></script>
+<script>
+window.bake = async function (id, q) {
+  const M = MAPS[id];
+  const layers = await M.paint();
+  return { fallback: M.fallback, layers: layers.map(L => {
+    const o = Object.assign({}, L); delete o.canvas;
+    if (L.canvas) { o.data = L.canvas.toDataURL('image/webp', q || 0.9); o.px = [L.canvas.width, L.canvas.height]; }
+    return o;
+  }) };
+};
+</script>
+</body>

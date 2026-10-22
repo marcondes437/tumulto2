@@ -1,0 +1,9 @@
+# Render: New → Blueprint → escolha este repositório. Cria o servidor do jogo (página + online).
+services:
+  - type: web
+    name: tumulto
+    runtime: node
+    plan: free
+    buildCommand: echo "sem dependencias"
+    startCommand: node server.js
+    healthCheckPath: /health

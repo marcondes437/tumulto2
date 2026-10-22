@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Tumulto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@600;800;900&display=swap">
+<style>
+:root{
+  --bg:#1a1030; --panel:rgba(22,14,44,.86); --panel-2:rgba(40,26,76,.9); --line:rgba(255,255,255,.14);
+  --ink:#fff7ea; --muted:#bfb0dd; --accent:#ff8a3d; --accent-2:#ffd23f; --good:#5be08a; --bad:#ff5a6a;
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1a1030; --panel:rgba(22,14,44,.86); --panel-2:rgba(40,26,76,.9); --line:rgba(255,255,255,.14);
+  --ink:#fff7ea; --muted:#bfb0dd; --accent:#ff8a3d; --accent-2:#ffd23f; --good:#5be08a; --bad:#ff5a6a;
+}}
+:root[data-theme="dark"]{ --bg:#1a1030; --panel:rgba(22,14,44,.86); --ink:#fff7ea; --muted:#bfb0dd; }
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;-webkit-user-select:none;user-select:none;touch-action:none}
+#cv{position:fixed;inset:0;width:100%;height:100%;display:block}
+#ui{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding-block:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));pointer-events:none}
+.screen{display:none;pointer-events:auto;width:min(980px,100%);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+.screen.on{display:block;animation:pop .22s ease-out}
+@keyframes pop{from{transform:translateY(10px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+#scr-title{background:transparent;border:none;box-shadow:none;backdrop-filter:none;text-align:center;width:min(560px,100%)}
+.logo{font-family:Bungee,Impact,sans-serif;font-size:clamp(48px,11vw,104px);line-height:.9;margin:0;letter-spacing:2px;
+  background:linear-gradient(180deg,#ffe36b 0%,#ff9a3d 55%,#ff4f5a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 5px 0 #3a1650) drop-shadow(0 12px 18px rgba(0,0,0,.5));transform:rotate(-3deg)}
+.tag{margin:14px 0 26px;color:#fff;font-weight:800;text-shadow:0 2px 6px rgba(0,0,0,.6)}
+h2{font-family:Bungee,Impact,sans-serif;font-weight:400;margin:0 0 16px;font-size:28px;letter-spacing:1px}
+h3{margin:0 0 8px;font-size:16px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
+.menu{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+.btn{font:inherit;font-weight:900;font-size:18px;color:#2a1240;background:linear-gradient(180deg,#ffd86b,#ff9a3d);border:none;border-radius:14px;padding:14px 20px;cursor:pointer;
+  box-shadow:0 5px 0 #a24a1d,0 10px 18px rgba(0,0,0,.35);transition:transform .08s,filter .15s;letter-spacing:.3px}
+.btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(3px);box-shadow:0 2px 0 #a24a1d}
+.btn.alt{background:linear-gradient(180deg,#8a7bd8,#5b48b5);color:#fff;box-shadow:0 5px 0 #2e2170,0 10px 18px rgba(0,0,0,.35)}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line);box-shadow:none}
+.btn.small{font-size:14px;padding:8px 12px;border-radius:10px}
+.btn:disabled{filter:grayscale(1) brightness(.7);cursor:not-allowed}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.spacer{flex:1}
+input[type=text]{font:inherit;font-weight:800;font-size:18px;color:var(--ink);background:rgba(0,0,0,.35);border:2px solid var(--line);border-radius:12px;padding:12px 14px;outline:none;width:100%;-webkit-user-select:text;user-select:text}
+input[type=text]:focus{border-color:var(--accent)}
+.namebox{display:flex;gap:10px;align-items:center;margin-bottom:16px;background:rgba(0,0,0,.35);padding:10px 12px;border-radius:14px}
+.namebox label{font-weight:900;white-space:nowrap}
+.chars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.chars{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.card{position:relative;background:linear-gradient(180deg,var(--tint,#221a40) 0%,rgba(18,12,36,.96) 78%);border:2px solid rgba(255,255,255,.08);border-radius:18px;cursor:pointer;overflow:hidden;display:flex;flex-direction:column;transition:transform .12s,border-color .12s,box-shadow .12s;outline:none}
+.card:hover,.card:focus-visible{transform:translateY(-3px);border-color:rgba(255,255,255,.25)}
+.card.sel{border-color:var(--c,#fff);box-shadow:0 0 0 2px var(--c,#fff),0 0 28px var(--c,#fff)}
+.card .art{position:relative;aspect-ratio:1/1.02;max-width:100%;overflow:hidden}
+.card .art img{width:100%;height:100%;object-fit:cover;object-position:50% 15%;display:block;transition:transform .25s}
+.card:hover .art img,.card.sel .art img{transform:scale(1.04)}
+.card .art::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(180deg,transparent,rgba(18,12,36,.96))}
+.card .id{position:relative;display:flex;align-items:center;gap:10px;margin-top:-34px;padding:0 12px;z-index:1}
+.card .ico{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--c);background:rgba(10,6,24,.75);border:2px solid color-mix(in srgb,var(--c) 60%,transparent);box-shadow:0 0 14px color-mix(in srgb,var(--c) 45%,transparent)}
+.card .ico svg{width:22px;height:22px}
+.card .idt{min-width:0}
+.card .nm{font-family:Bungee,Impact,sans-serif;font-size:clamp(18px,2.3vw,26px);line-height:1;text-transform:uppercase;letter-spacing:.5px;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.card .tt{font-size:11px;color:color-mix(in srgb,var(--c) 70%,#fff);font-weight:900;text-transform:uppercase;letter-spacing:.6px;margin-top:3px;line-height:1.2}
+.badge{position:absolute;top:10px;left:10px;font-size:12px;font-weight:900;padding:3px 9px;border-radius:99px;background:#fff;color:#20103a;z-index:2}
+.stats{margin:10px 12px 12px;display:grid;gap:5px;text-align:left;font-size:12px;font-weight:800;color:var(--ink)}
+.stat{display:grid;grid-template-columns:72px 1fr;align-items:center;gap:8px}
+.bar{height:8px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}.bar i{display:block;height:100%;border-radius:3px;background:var(--c,#fff)}
+.head{display:block;border-radius:50%;object-fit:cover;background:#0c0820}
+.desc{margin:14px 0 0;color:var(--muted);font-weight:700;min-height:22px}
+.opts{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;align-items:flex-end}
+.seg{display:inline-flex;background:rgba(0,0,0,.35);border-radius:12px;padding:4px;gap:4px}
+.seg button{font:inherit;font-weight:900;border:none;background:transparent;color:var(--muted);padding:8px 12px;border-radius:9px;cursor:pointer}
+.seg button.on{background:var(--accent);color:#2a1240}
+.foot{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+.code{font-family:Bungee,Impact,sans-serif;font-size:44px;letter-spacing:6px;color:var(--accent-2)}
+.plist{display:grid;gap:10px;margin:12px 0}
+.pl{display:flex;align-items:center;gap:12px;background:var(--panel-2);border-radius:14px;padding:8px 12px;border-left:6px solid var(--c,#888)}
+.pl .head{width:52px;height:52px;border:2px solid var(--c,#888)}
+.pl .n{font-weight:900;font-size:18px}.pl .s{color:var(--muted);font-size:13px;font-weight:800}
+.mini{display:flex;gap:8px;flex-wrap:wrap}
+.mini button{border:3px solid transparent;border-radius:12px;background:var(--panel-2);padding:2px;cursor:pointer}
+.mini button.on{border-color:var(--c)}
+.mini .head{width:56px;height:56px}
+.rooms{display:grid;gap:8px;margin-top:10px}
+.room{display:flex;align-items:center;gap:10px;background:var(--panel-2);border-radius:12px;padding:8px 12px;font-weight:800}
+.muted{color:var(--muted);font-weight:700}
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.keys table{width:100%;border-collapse:collapse;font-weight:800;font-size:14px}
+.keys td{padding:6px 4px;border-bottom:1px solid var(--line)}
+kbd{display:inline-block;min-width:26px;text-align:center;background:#fff;color:#20103a;border-radius:6px;padding:1px 6px;margin:1px;font-family:inherit;font-weight:900;box-shadow:0 2px 0 #9b8fc4}
+.res{width:100%;border-collapse:collapse;font-weight:800}
+.res th{color:var(--muted);text-align:left;font-size:13px;padding:6px}
+.res td{padding:8px 6px;border-top:1px solid var(--line)}
+.res .pos{font-family:Bungee,Impact,sans-serif;font-size:22px}
+#toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:#fff;color:#20103a;font-weight:900;padding:10px 16px;border-radius:12px;box-shadow:var(--shadow);opacity:0;transition:opacity .2s;pointer-events:none;z-index:20;max-width:calc(100% - 32px);text-align:center}
+#toast.on{opacity:1}
+#hudbtns{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));display:flex;gap:8px;z-index:10}
+#hudbtns button{font:inherit;font-weight:900;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer}
+#netinfo{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:calc(14px + env(safe-area-inset-left,0px));font-weight:900;font-size:13px;color:var(--muted);z-index:10;text-shadow:0 1px 3px #000}
+#pause{position:fixed;inset:0;background:rgba(10,5,20,.6);display:none;align-items:center;justify-content:center;z-index:15}
+#pause.on{display:flex}
+#pause .screen{display:block;width:min(360px,100%);text-align:center}
+#touch{position:fixed;inset:0;pointer-events:none;display:none;z-index:5}
+#touch.on{display:block}
+#stick{position:absolute;left:20px;bottom:24px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.2);pointer-events:auto}
+#stick i{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px;border-radius:50%;background:rgba(255,255,255,.35)}
+#tbtns{position:absolute;right:16px;bottom:20px;display:grid;grid-template-columns:repeat(2,70px);gap:12px;pointer-events:auto}
+#tbtns button{width:70px;height:70px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;font:inherit;font-weight:900;font-size:12px}
+#tbtns button.on{background:rgba(255,200,80,.5)}
+#tbtns button.pu{grid-column:1 / span 2;justify-self:center;width:84px;height:52px;border-radius:26px;font-size:11px;line-height:1.1;border-color:rgba(255,210,63,.6)}
+.maps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:760px){.maps{grid-template-columns:repeat(2,1fr)}}
+.map{font:inherit;color:var(--ink);text-align:left;background:var(--panel-2);border:3px solid transparent;border-radius:14px;padding:0;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:transform .1s,border-color .1s}
+.map:hover:not(:disabled){transform:translateY(-2px)}
+.map.on{border-color:var(--accent-2);box-shadow:0 0 18px rgba(255,210,63,.45)}
+.map:disabled{cursor:default;opacity:.45}
+.map img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#0c0820}
+.map .mn{font-family:Bungee,Impact,sans-serif;font-size:14px;padding:6px 8px 0}
+.map .ms{font-size:11px;font-weight:800;color:var(--muted);padding:0 8px 7px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="netinfo"></div>
+<div id="hudbtns"><button id="btn-mute" title="Som">🔊</button><button id="btn-pause" class="hide" title="Pausa">II</button></div>
+
+<div id="ui">
+  <section id="scr-title" class="screen on">
+    <h1 class="logo">TUMULTO</h1>
+    <p class="tag">Pancadaria de plataforma em 4 arenas — até 10 jogadores</p>
+    <div class="namebox"><label for="in-name">Seu nome</label><input id="in-name" type="text" maxlength="16" placeholder="Jogador"></div>
+    <div class="menu">
+      <button class="btn" data-go="online">Jogar online com amigos</button>
+      <button class="btn alt" data-go="cpu">Treinar contra a CPU</button>
+      <button class="btn alt" data-go="local">2 jogadores no mesmo PC</button>
+      <button class="btn ghost" data-go="controls">Controles</button>
+    </div>
+  </section>
+
+  <section id="scr-select" class="screen">
+    <div class="row"><h2 id="sel-title">Escolha seu lutador</h2><span class="spacer"></span><button class="btn ghost small" data-go="title">Voltar</button></div>
+    <div class="chars" id="sel-chars"></div>
+    <p class="desc" id="sel-desc"></p>
+    <div class="opts" id="sel-opts">
+      <div id="opt-cpus"><h3>CPUs</h3><div class="seg" data-opt="cpus"><button data-v="1" class="on">1</button><button data-v="2">2</button><button data-v="3">3</button></div></div>
+      <div id="opt-lvl"><h3>Dificuldade</h3><div class="seg" data-opt="lvl"><button data-v="1">Fácil</button><button data-v="2" class="on">Normal</button><button data-v="3">Difícil</button></div></div>
+      <div><h3>Vidas</h3><div class="seg" data-opt="stocks"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div></div>
+    </div>
+    <h3 style="margin-top:18px">Arena</h3>
+    <div class="maps" id="sel-maps"></div>
+    <div class="foot"><button class="btn" id="sel-go">Lutar!</button></div>
+  </section>
+
+  <section id="scr-online" class="screen">
+    <div class="row"><h2>Jogar online</h2><span class="spacer"></span><button class="btn ghost small" data-go="title">Voltar</button></div>
+    <p class="muted" id="on-help">Crie uma sala e mande o código para seus amigos, ou entre na sala de alguém.</p>
+    <div class="row" style="margin:14px 0"><button class="btn" id="on-create">Criar sala</button></div>
+    <h3>Entrar com código</h3>
+    <div class="row"><div style="flex:1;min-width:160px"><input id="in-code" type="text" maxlength="6" placeholder="Ex.: K7QX" style="text-transform:uppercase"></div><button class="btn alt" id="on-join">Entrar</button></div>
+    <h3 style="margin-top:18px">Salas abertas</h3>
+    <div class="rooms" id="on-rooms"><span class="muted">Procurando…</span></div>
+  </section>
+
+  <section id="scr-lobby" class="screen">
+    <div class="row"><div><h3>Código da sala</h3><div class="code" id="lb-code">----</div></div><span class="spacer"></span>
+      <button class="btn alt small" id="lb-copy">Copiar convite</button><button class="btn ghost small" id="lb-leave">Sair da sala</button></div>
+    <div class="plist" id="lb-players"></div>
+    <h3>Seu lutador</h3>
+    <div class="mini" id="lb-chars"></div>
+    <h3 style="margin-top:16px">Arena</h3>
+    <div class="maps" id="lb-maps"></div>
+    <div id="lb-host" style="margin-top:16px">
+      <div class="opts">
+        <div><h3>Vidas</h3><div class="seg" id="lb-stocks"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3" class="on">3</button><button data-v="5">5</button></div></div>
+        <div><h3>Adicionar CPU</h3><div class="row"><button class="btn ghost small" data-cpu="1">Fácil</button><button class="btn ghost small" data-cpu="2">Normal</button><button class="btn ghost small" data-cpu="3">Difícil</button></div></div>
+      </div>
+      <div class="foot"><button class="btn" id="lb-start">Começar partida</button></div>
+    </div>
+    <p class="muted" id="lb-wait"></p>
+  </section>
+
+  <section id="scr-results" class="screen">
+    <h2 id="rs-title">Fim de jogo</h2>
+    <table class="res"><thead><tr><th>#</th><th>Lutador</th><th>Nocautes</th><th>Quedas</th><th>Dano causado</th></tr></thead><tbody id="rs-body"></tbody></table>
+    <div class="foot" id="rs-foot"></div>
+  </section>
+
+  <section id="scr-controls" class="screen">
+    <div class="row"><h2>Controles</h2><span class="spacer"></span><button class="btn ghost small" data-go="title">Voltar</button></div>
+    <div class="keys">
+      <table><tr><td colspan="2" style="color:var(--accent-2)">Jogador 1 (ou sozinho / online)</td></tr>
+        <tr><td>Mover / mirar</td><td><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></td></tr>
+        <tr><td>Pular</td><td><kbd>Espaço</kbd></td></tr>
+        <tr><td>Ataque leve</td><td><kbd>J</kbd></td></tr>
+        <tr><td>Ataque pesado</td><td><kbd>K</kbd> (segure no chão p/ carregar)</td></tr>
+        <tr><td>Esquiva</td><td><kbd>L</kbd> ou <kbd>Shift</kbd></td></tr>
+        <tr><td>Pegar / arremessar arma</td><td><kbd>H</kbd> ou <kbd>I</kbd></td></tr>
+        <tr><td>Descer da plataforma fina</td><td>Segure <kbd>S</kbd> ou <kbd>S</kbd>+<kbd>Espaço</kbd></td></tr>
+        <tr><td>Ver colisões / hitboxes</td><td><kbd>F2</kbd></td></tr></table>
+      <table><tr><td colspan="2" style="color:var(--accent-2)">Jogador 2 (mesmo PC)</td></tr>
+        <tr><td>Mover / mirar</td><td><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd></td></tr>
+        <tr><td>Pular</td><td><kbd>Enter</kbd> ou <kbd>Num 0</kbd></td></tr>
+        <tr><td>Ataque leve</td><td><kbd>,</kbd> ou <kbd>Num 1</kbd></td></tr>
+        <tr><td>Ataque pesado</td><td><kbd>.</kbd> ou <kbd>Num 2</kbd></td></tr>
+        <tr><td>Esquiva</td><td><kbd>/</kbd> ou <kbd>Num 3</kbd></td></tr>
+        <tr><td>Pegar / arremessar arma</td><td><kbd>'</kbd> ou <kbd>Num 4</kbd></td></tr></table>
+      <table><tr><td colspan="2" style="color:var(--accent-2)">Controle (Xbox/PS)</td></tr>
+        <tr><td>Mover</td><td>Analógico / direcional</td></tr>
+        <tr><td>Pular</td><td><kbd>A</kbd> / <kbd>✕</kbd></td></tr>
+        <tr><td>Leve</td><td><kbd>X</kbd> / <kbd>□</kbd></td></tr>
+        <tr><td>Pesado</td><td><kbd>B</kbd> / <kbd>○</kbd></td></tr>
+        <tr><td>Pegar / arremessar arma</td><td><kbd>Y</kbd> / <kbd>△</kbd></td></tr>
+        <tr><td>Esquiva</td><td>Gatilhos / <kbd>LB</kbd> <kbd>RB</kbd></td></tr></table>
+    </div>
+    <p class="muted" style="margin-top:14px"><b>Armas:</b> todo mundo entra de mãos vazias (socos e chutes fracos). As armas caem do céu num emblema brilhante — encoste e aperte <b>Pegar</b> para empunhar a arma do seu lutador. Com a arma na mão, <b>Pegar</b> arremessa (cima = para o alto, baixo no ar = para baixo); quem perde uma vida perde a arma.</p>
+    <p class="muted">Dicas: cada ataque muda com a direção segurada (neutro, lado, baixo). <b>Cima + pesado</b> é seu golpe de recuperação, use para voltar ao palco. <b>Baixo + pesado no ar</b> é uma pancada no chão. Quanto mais % de dano, mais longe você voa — saia pelas bordas da tela e perde uma vida. Encoste na parede do palco e aperte pular para escalar. <b>Segure baixo</b> (ou baixo + pular) para descer das plataformas finas; segurar baixo no ar faz queda rápida e atravessa essas plataformas.</p>
+  </section>
+</div>
+
+<div id="pause"><div class="screen"><h2>Pausa</h2><div class="menu"><button class="btn" id="pz-resume">Continuar</button><button class="btn ghost" id="pz-quit">Sair da partida</button></div></div></div>
+<div id="touch"><div id="stick"><i></i></div><div id="tbtns"><button data-b="2">PESADO</button><button data-b="0">PULAR</button><button data-b="3">ESQUIVA</button><button data-b="1">LEVE</button><button data-b="4" class="pu">PEGAR<br>ARMA</button></div></div>
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script src="sim.js"></script>
+<script src="maps/manifest.js"></script>
+<script src="arena.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
